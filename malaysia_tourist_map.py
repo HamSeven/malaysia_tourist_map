@@ -62,16 +62,12 @@ def create_interactive_map(data):
     # Add layer control
     folium.LayerControl().add_to(malaysia_map)
 
-    # Add a message with the total number of attractions
+    # Add a marker with the total number of attractions
     total_attractions = len(data)
     folium.Marker(
         location=[4.2105, 101.9758],
         popup=f"<b>Total Attractions:</b> {total_attractions}",
-        icon=folium.DivIcon(html=f"""
-            <div style="background-color: white; border: 1px solid black; padding: 5px;">
-                <b>Total Attractions: {total_attractions}</b>
-            </div>
-        """)
+        icon=folium.Icon(color="darkblue", icon="info-sign")
     ).add_to(malaysia_map)
 
     return malaysia_map
@@ -131,15 +127,14 @@ st.title("Malaysia Tourist Attractions Map")
 st.write("Explore the tourist attractions across Malaysia. Each marker provides details about the attraction.")
 
 # Display the CSV download link
-st.download_button(
-    label="Download Attractions CSV",
-    data=open(csv_filename, "rb"),
-    file_name=csv_filename,
-    mime="text/csv"
-)
+with open(csv_filename, "rb") as file:
+    st.download_button(
+        label="Download Attractions CSV",
+        data=file,
+        file_name=csv_filename,
+        mime="text/csv"
+    )
 
-# Create the interactive map
+# Create and display the map
 map_display = create_interactive_map(malaysia_tourist_attractions)
-
-# Display the map
 st_folium(map_display, width=700, height=500)
